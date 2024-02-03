@@ -21,7 +21,7 @@ public class CategoryRestController {
     /**
      * GET http://localhost:8080/categories/all
      */
-    @GetMapping("/all")
+    @GetMapping("")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Categories not found")
@@ -36,7 +36,7 @@ public class CategoryRestController {
      * @param id
      * @return
      */
-    @GetMapping("/category/{id}")
+    @GetMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "OK"),
             @ApiResponse(responseCode = "404", description = "Category not found")
@@ -51,7 +51,7 @@ public class CategoryRestController {
      * @param category
      * @return
      */
-    @PostMapping("/save")
+    @PostMapping("")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "201", description = "Category created"),
             @ApiResponse(responseCode = "400", description = "Invalid request"),
@@ -75,7 +75,7 @@ public class CategoryRestController {
      * @param id
      * @return
      */
-    @PutMapping("/update/{id}")
+    @PutMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category updated"),
             @ApiResponse(responseCode = "400", description = "Invalid request"),
@@ -98,7 +98,7 @@ public class CategoryRestController {
      * @param id
      * @return
      */
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/{id}")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Category deleted"),
             @ApiResponse(responseCode = "404", description = "Category not found")
