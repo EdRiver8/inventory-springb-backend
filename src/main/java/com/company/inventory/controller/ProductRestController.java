@@ -2,6 +2,7 @@ package com.company.inventory.controller;
 
 import java.io.IOException;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -11,6 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.company.inventory.model.Product;
+import com.company.inventory.response.CategoryResponseRest;
 import com.company.inventory.response.ProductResponseRest;
 import com.company.inventory.service.IProductService;
 import com.company.inventory.util.Image;
@@ -88,7 +90,18 @@ public class ProductRestController {
         return iProductService.delete(id);
     }
 
-    // update product
+    /**
+     * Update a product
+     * 
+     * @param image
+     * @param id
+     * @param name
+     * @param price
+     * @param quantity
+     * @param categoryId
+     * @return ResponseEntity<ProductResponseRest>
+     * @throws IOException
+     */
     @PutMapping("/{categoryId}")
     public ResponseEntity<ProductResponseRest> update(
             @RequestParam("image") MultipartFile image,
@@ -96,16 +109,28 @@ public class ProductRestController {
             @RequestParam("name") String name,
             @RequestParam("price") Integer price,
             @RequestParam("quantity") Integer quantity,
-            @PathVariable Long categoryId) throws IOException {
+            @PathVariable Long categoryId) {
 
-        Product product = new Product();
-        product.setId(id);
-        product.setName(name);
-        product.setPrice(price);
-        product.setQuantity(quantity);
-        product.setImage(Image.compressZLib(image.getBytes()));
+        if (image.isEmpty() || id == null || name == null || name.isEmpty() || price == null || quantity == null
+                || categoryId == null) {
+            ProductResponseRest response = new ProductResponseRest();
+            response.setMetadata("ERROR", "-1", "Invalid request");
+            return new ResponseEntity<>(response, HttpStatus.BAD_REQUEST);
+        }
 
-        return iProductService.update(product, categoryId);
+        try {
+            Product product = new Product();
+            product.setId(id);
+            product.setName(name);
+            product.setPrice(price);
+            product.setQuantity(quantity);
+            product.setImage(Image.compressZLib(image.getBytes()));
+
+            return iProductService.update(product, categoryId);
+        } catch (IOException e) {
+            // Log the exception, if you have a logger
+            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+        }
     }
 
 }
